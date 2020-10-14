@@ -1,0 +1,18 @@
+galaxy_info:
+  role_name: node_exporter
+  author: William Wu
+  description: Setup node exporter
+  company: PyLabs
+  license: MIT
+  min_ansible_version: 2.1
+  platforms:
+  - name: Debian
+    versions:
+    - Buster
+    - 10
+  galaxy_tags:
+    - debian
+    - prometheus
+    - node_exporter
+dependencies:
+  - pylabs.sysbase

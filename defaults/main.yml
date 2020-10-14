@@ -1,0 +1,4 @@
+---
+node_exporter_base_dir: "/opt/node_exporter"
+node_exporter_listen_address: "0.0.0.0"
+node_exporter_listen_port: 9100

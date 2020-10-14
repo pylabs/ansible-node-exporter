@@ -1,0 +1,42 @@
+---
+- block:
+  - name: create prometheus group account
+    group:
+      name: prometheus
+      state: present
+  - name: create prometheus user account
+    user:
+      name: prometheus
+      group: prometheus
+      state: present
+  - name: fetch node exporter tar file and extract it to destination
+    unarchive:
+      src: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+      dest: "/tmp"
+  - name: move node exporter package to final destination
+    command:
+      cmd: "mv /tmp/node_exporter-{{ node_exporter_version }}.linux-amd64 {{ node_exporter_base_dir }}"
+      creates: "{{ node_exporter_base_dir }}"
+  - name: setup file permissions
+    file:
+      path: "{{ node_exporter_base_dir }}"
+      state: directory
+      recurse: yes
+      owner: prometheus
+      group: prometheus
+      mode: "o-rwx"
+  - name: install node_exporter systemd service file
+    template:
+      src: "node_exporter.service"
+      dest: "/etc/systemd/system/node_exporter.service"
+      owner: root
+      group: root
+      mode: "0644"
+  - name: setup node_exporter systemd service
+    systemd:
+      name: "node_exporter.service"
+      daemon_reload: yes
+      enabled: yes
+      state: started
+  tags:
+    - node_exporter
