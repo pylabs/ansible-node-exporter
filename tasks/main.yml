@@ -16,6 +16,7 @@
     unarchive:
       src: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
       dest: "/tmp"
+      remote_src: yes
   - name: move node exporter package to final destination
     command:
       cmd: "mv /tmp/node_exporter-{{ node_exporter_version }}.linux-amd64 {{ node_exporter_base_dir }}"
