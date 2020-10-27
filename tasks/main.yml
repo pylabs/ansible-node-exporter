@@ -41,6 +41,6 @@
       name: "node_exporter.service"
       daemon_reload: yes
       enabled: yes
-      state: started
+      state: restarted
   tags:
     - node_exporter
