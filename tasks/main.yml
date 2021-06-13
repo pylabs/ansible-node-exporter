@@ -1,28 +1,28 @@
 ---
 - block:
   - name: create prometheus group account
-    group:
+    ansible.builtin.group:
       name: prometheus
       system: yes
       state: present
   - name: create prometheus user account
-    user:
+    ansible.builtin.user:
       name: prometheus
       group: prometheus
       system: yes
       shell: "/bin/false"
       state: present
   - name: fetch node exporter tar file and extract it to destination
-    unarchive:
+    ansible.builtin.unarchive:
       src: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
       dest: "/tmp"
       remote_src: yes
   - name: move node exporter package to final destination
-    command:
+    ansible.builtin.command:
       cmd: "mv /tmp/node_exporter-{{ node_exporter_version }}.linux-amd64 {{ node_exporter_base_dir }}"
       creates: "{{ node_exporter_base_dir }}"
   - name: setup file permissions
-    file:
+    ansible.builtin.file:
       path: "{{ node_exporter_base_dir }}"
       state: directory
       recurse: yes
@@ -30,14 +30,14 @@
       group: prometheus
       mode: "o-rwx"
   - name: install node_exporter systemd service file
-    template:
+    ansible.builtin.template:
       src: "node_exporter.service"
       dest: "/etc/systemd/system/node_exporter.service"
       owner: root
       group: root
       mode: "0644"
   - name: setup node_exporter systemd service
-    systemd:
+    ansible.builtin.systemd:
       name: "node_exporter.service"
       daemon_reload: yes
       enabled: yes
